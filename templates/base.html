@@ -16,8 +16,8 @@
     </a>
     {%- set path = current_path | default(value="/") -%}
     <nav>
-        <a href="/news/"{% if path is starting_with("/news") %} aria-current="page"{% endif %}>News</a>
-        <a href="/discussions/"{% if path is starting_with("/discussions") %} aria-current="page"{% endif %}>Discussions</a>
+        <a href="/news/"{% if path is starting_with(pat="/news") %} aria-current="page"{% endif %}>News</a>
+        <a href="/discussions/"{% if path is starting_with(pat="/discussions") %} aria-current="page"{% endif %}>Discussions</a>
         <a href="https://github.com/oxidhome" rel="external noopener">GitHub</a>
     </nav>
 </header>

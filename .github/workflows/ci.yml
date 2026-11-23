@@ -15,14 +15,29 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      ZOLA_IMAGE: ghcr.io/getzola/zola:v0.22.1@sha256:b491a8bec3773815bdcdbbfbc2d0d60eda880ef550c4cc512349ab6451fbd72a
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Read Zola image
+        run: echo "ZOLA_IMAGE=$(sed -n 's/^FROM //p' .github/zola/Dockerfile)" >> "$GITHUB_ENV"
 
       - name: Check site
         run: docker run --rm -v "$GITHUB_WORKSPACE:/app" --workdir /app "$ZOLA_IMAGE" check
 
       - name: Build site
         run: docker run --rm -v "$GITHUB_WORKSPACE:/app" --workdir /app "$ZOLA_IMAGE" build
+
+      # `--offline` checks only local links (files and, with
+      # `--include-fragments`, anchors), so a flaky external site can't
+      # fail CI; `zola check` above covers external links and the `@/`
+      # internal links in `content/`, which lychee can't resolve.
+      # `--root-dir` and `--index-files` resolve root-relative links like
+      # `/site.css` and `/#anchor` in the built site.
+      - name: Check links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --offline --no-progress --include-fragments
+            --root-dir ${{ github.workspace }}/public --index-files=index.html
+            README.md CONTRIBUTING.md public

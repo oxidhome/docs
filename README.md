@@ -1,6 +1,6 @@
 # oxidhome.info
 
-[![Publish](https://github.com/oxidhome/site/actions/workflows/publish.yml/badge.svg)](https://github.com/oxidhome/site/actions/workflows/publish.yml)
+[![Publish](https://github.com/oxidhome/docs/actions/workflows/publish.yml/badge.svg)](https://github.com/oxidhome/docs/actions/workflows/publish.yml)
 
 Source for [oxidhome.info](https://oxidhome.info), the project site for **OxidHome** — an open home-automation platform
 built around a Rust core and WebAssembly plugins.
@@ -14,6 +14,9 @@ zola serve
 ```
 
 Then open http://127.0.0.1:1111.
+
+CI and Publish use the Zola image pinned in [`.github/zola/Dockerfile`](.github/zola/Dockerfile), which Dependabot
+keeps up to date; use the same Zola version locally.
 
 ## Layout
 

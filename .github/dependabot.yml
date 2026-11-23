@@ -10,3 +10,9 @@ updates:
       ci:
         patterns:
           - "*"
+  - package-ecosystem: docker
+    directory: /.github/zola
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
