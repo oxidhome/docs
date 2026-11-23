@@ -20,11 +20,19 @@ jobs:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Build Zola + upload Pages artifact
-        uses: getzola/github-pages@435a833fd3f1edcb28d70576c89e30a6365cd8f7
+      - name: Read Zola image
+        run: echo "ZOLA_IMAGE=$(sed -n 's/^FROM //p' .github/zola/Dockerfile)" >> "$GITHUB_ENV"
+
+      - name: Check site
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/app" --workdir /app "$ZOLA_IMAGE" check
+
+      - name: Build site
+        run: docker run --rm -v "$GITHUB_WORKSPACE:/app" --workdir /app "$ZOLA_IMAGE" build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          zola_version: v0.22.1
-          check_links: true
+          path: public
 
   deploy:
     runs-on: ubuntu-latest
